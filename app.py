@@ -143,7 +143,7 @@ elif menu == "Faktor Pengenceran":
 
 # --- FOOTER ---
 st.markdown("---")
-st.caption("Dibuat untuk memenuhi Tugas Akhir | © 2026")v
+st.caption("Dibuat untuk memenuhi Tugas Akhir | © 2026")
 
 ### How to run it on your own machine
 
