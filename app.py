@@ -144,9 +144,3 @@ elif menu == "Faktor Pengenceran":
 # --- FOOTER ---
 st.markdown("---")
 st.caption("Dibuat untuk memenuhi Tugas Akhir | © 2026")
-
-2. Run the app
-
-   ```
-   $ streamlit run streamlit_app.py
-   ```
