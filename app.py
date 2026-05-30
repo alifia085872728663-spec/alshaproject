@@ -1,6 +1,5 @@
 import streamlit as st
 import re
-import base64
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(
@@ -9,138 +8,105 @@ st.set_page_config(
     layout="centered"
 )
 
-# Fungsi untuk mengonversi gambar lokal menjadi format base64
-def get_base64_of_bin_file(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+# --- REVISI TOTAL: GRADASI & ELEMEN KIMIA MURNI CSS/SVG (TANPA CEK FILE GAMBAR) ---
+st.markdown("""
+    <style>
+    /* Background dengan gradasi warna Lembut: Biru -> Putih -> Kuning */
+    .stApp {
+        background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #fef9c3 100%) !important;
+        background-attachment: fixed !important;
+        color: #1e293b;
+    }
 
-# Tentukan jalur file gambar latar belakang (pastikan file ini ada di folder yang sama)
-background_image_file = "image_6.png"
-
-try:
-    # Mengonversi gambar menjadi base64
-    bin_str = get_base64_of_bin_file(background_image_file)
+    /* Elemen Grafis Kimia Transparan (Erlenmeyer, Labu, Atom, Molekul) Langsung via SVG */
+    .stApp::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.08; /* Transparansi elemen kimia agar tidak menutupi teks */
+        z-index: 0;
+        background-image: 
+            /* Gelas Kimia & Ikatan Molekul di Kiri Bawah */
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%230284c7' stroke-width='3'%3E%3Cpath d='M80 650 L140 650 L120 530 L100 530 Z' /%3E%3Cpath d='M100 560 L140 560 M105 590 L135 590 M110 620 L130 620' /%3E%3Ccircle cx='190' cy='520' r='12' /%3E%3Ccircle cx='250' cy='490' r='18' /%3E%3Ccircle cx='290' cy='540' r='10' /%3E%3Cline x1='190' y1='520' x2='235' y2='495' /%3E%3Cline x1='250' y1='490' x2='290' y2='530' /%3E%3C/g%3E%3C/svg%3E"),
+            /* Erlenmeyer & Struktur Cincin Benzena di Kanan Atas */
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%230369a1' stroke-width='2.5'%3E%3Cpath d='M680 150 L680 190 L630 300 L730 300 L680 190' /%3E%3Cpath d='M645 270 L715 270 M655 240 L705 240' /%3E%3Cpolygon points='600,100 640,80 680,100 680,140 640,160 600,140' /%3E%3Cpolygon points='560,140 600,160 600,200 560,220 520,200 520,140' /%3E%3C/g%3E%3C/svg%3E");
+        background-position: left bottom, right top;
+        background-repeat: no-repeat;
+        background-size: 380px, 380px;
+    }
     
-    # --- PERBAIKAN 4: LATAR BELAKANG GRADIEN & ELEMEN KIMIA ---
-    st.markdown(f"""
-        <style>
-        /* Gradien latar belakang cerah (biru muda ke teal muda) */
-        .stApp {{
-            background-color: #f0fdfd;
-            background-image: 
-                /* Latar belakang grafis kimia dari gambar 6 */
-                linear-gradient(to bottom right, rgba(235, 253, 253, 0.9), rgba(204, 251, 241, 0.9)),
-                url("data:image/png;base64,{bin_str}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #1e293b;
-        }}
-        
-        /* Navigasi Sidebar */
-        div[data-testid="stSidebar"] {{
-            background-color: rgba(255, 255, 255, 0.95) !important;
-            border-right: 2px solid #e2e8f0;
-        }}
-        
-        /* Header & Teks */
-        h1, h2, h3 {{
-            color: #0f766e !important;
-            font-weight: 700;
-        }}
-        
-        /* Kotak Identitas Kelompok */
-        .identitas-box {{
-            background-color: rgba(255, 255, 255, 0.85);
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 6px solid #0d9488;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
-        }}
-        
-        /* Tombol Utama */
-        .stButton>button {{
-            background-color: #0d9488 !important;
-            color: white !important;
-            border-radius: 8px !important;
-            font-weight: bold !important;
-            border: none !important;
-            width: 100%;
-            transition: all 0.3s ease;
-        }}
-        .stButton>button:hover {{
-            background-color: #0f766e !important;
-            transform: translateY(-1px);
-        }}
-        
-        /* Kotak Input */
-        div[data-testid="stNumberInput"] label {{
-            color: #0f766e !important;
-            font-weight: 600;
-        }}
+    /* Memastikan konten utama berada di atas background */
+    .main .block-container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Navigasi Sidebar */
+    div[data-testid="stSidebar"] {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border-right: 1px solid #e2e8f0;
+    }
+    
+    /* Judul & Sub-judul */
+    h1, h2, h3 {
+        color: #0369a1 !important;
+        font-weight: 700;
+    }
+    
+    /* Kotak Kelompok */
+    .identitas-box {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 18px;
+        border-radius: 12px;
+        border-left: 5px solid #0ea5e9;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+    
+    /* Tombol Utama */
+    .stButton>button {
+        background-color: #0ea5e9 !important;
+        color: white !important;
+        border-radius: 8px !important;
+        font-weight: bold !important;
+        border: none !important;
+        width: 100%;
+        padding: 10px 0px;
+    }
+    .stButton>button:hover {
+        background-color: #0284c7 !important;
+    }
+    
+    /* Kotak Hasil Output (Alert) */
+    div[data-testid="stNotification"] {
+        background-color: rgba(240, 253, 250, 0.95) !important;
+        border: 1px solid #99f6e4 !important;
+        border-left: 6px solid #0d9488 !important;
+    }
+    div[data-testid="stNotification"] p {
+        color: #115e59 !important;
+        font-size: 1.1rem !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
-        /* Kotak Hasil (Alert) Kontras Tinggi */
-        div[data-testid="stNotification"] {{
-            background-color: rgba(240, 253, 250, 0.9) !important;
-            border: 1px solid #99f6e4 !important;
-            border-left: 6px solid #0d9488 !important;
-            color: #115e59 !important;
-        }}
-        div[data-testid="stNotification"] p {{
-            color: #115e59 !important;
-            font-weight: 600;
-        }}
-        </style>
-        """, unsafe_allow_html=True)
-
-except FileNotFoundError:
-    # Fallback jika gambar tidak ditemukan
-    st.warning(f"Gambar latar belakang '{background_image_file}' tidak ditemukan. Menggunakan fallback gradien saja.")
-    st.markdown("""
-        <style>
-        .stApp {{
-            background-color: #f0fdfd;
-            background-image: 
-                linear-gradient(to bottom right, rgba(235, 253, 253, 0.95), rgba(204, 251, 241, 0.95));
-            color: #1e293b;
-        }}
-        /* Sisanya sama */
-        div[data-testid="stSidebar"] {{ background-color: rgba(255, 255, 255, 0.95) !important; }}
-        h1, h2, h3 {{ color: #0f766e !important; }}
-        /* ... */
-        </style>
-        """, unsafe_allow_html=True)
-
-# --- DATABASE TABEL PERIODIK LENGKAP ---
+# --- DATABASE TABEL PERIODIK ---
 AR_PERIODIK = {
     'H': 1.008, 'He': 4.0026, 'Li': 6.94, 'Be': 9.0122, 'B': 10.81, 'C': 12.011, 'N': 14.007, 'O': 15.999, 'F': 18.998, 'Ne': 20.180,
     'Na': 22.990, 'Mg': 24.305, 'Al': 26.982, 'Si': 28.085, 'P': 30.974, 'S': 32.06, 'Cl': 35.45, 'Ar': 39.948, 'K': 39.098, 'Ca': 40.078,
-    'Sc': 44.956, 'Ti': 47.867, 'V': 50.942, 'Cr': 51.996, 'Mn': 54.938, 'Fe': 55.845, 'Co': 58.933, 'Ni': 58.693, 'Cu': 63.546, 'Zn': 65.38,
-    'Ga': 69.723, 'Ge': 72.63, 'As': 74.922, 'Se': 78.971, 'Br': 79.904, 'Kr': 83.798, 'Rb': 85.468, 'Sr': 87.62, 'Y': 88.906, 'Zr': 91.224,
-    'Nb': 92.906, 'Mo': 95.95, 'Tc': 98, 'Ru': 101.07, 'Rh': 102.91, 'Pd': 106.42, 'Ag': 107.87, 'Cd': 112.41, 'In': 114.82, 'Sn': 118.71,
-    'Sb': 121.76, 'I': 126.90, 'Xe': 131.29, 'Cs': 132.91, 'Ba': 137.33, 'La': 138.91, 'Ce': 140.12, 'Pr': 140.91, 'Nd': 144.24, 'Pm': 145,
-    'Sm': 150.36, 'Eu': 151.96, 'Gd': 157.25, 'Tb': 158.93, 'Dy': 162.50, 'Ho': 164.93, 'Er': 167.26, 'Tm': 168.93, 'Yb': 173.05, 'Lu': 174.97,
-    'Hf': 178.49, 'Ta': 180.95, 'W': 183.84, 'Re': 186.21, 'Os': 190.23, 'Ir': 192.22, 'Pt': 195.08, 'Au': 196.97, 'Hg': 200.59, 'Tl': 204.38,
-    'Pb': 207.2, 'Bi': 208.98, 'Po': 209, 'At': 210, 'Rn': 222, 'Fr': 223, 'Ra': 226, 'Ac': 227, 'Th': 232.04, 'Pa': 231.04, 'U': 238.03,
-    'Np': 237, 'Pu': 244, 'Am': 243, 'Cm': 247, 'Bk': 247, 'Cf': 251, 'Es': 252, 'Fm': 257, 'Md': 258, 'No': 259, 'Lr': 262,
-    'Rf': 267, 'Db': 268, 'Sg': 269, 'Bh': 270, 'Hs': 277, 'Mt': 278, 'Ds': 281, 'Rg': 282, 'Cn': 285, 'Nh': 286, 'Fl': 289, 'Mc': 290,
-    'Lv': 293, 'Ts': 294, 'Og': 294
+    'Cr': 51.996, 'Mn': 54.938, 'Fe': 55.845, 'Co': 58.933, 'Ni': 58.693, 'Cu': 63.546, 'Zn': 65.38, 'Ag': 107.87, 'I': 126.90, 'Ba': 137.33, 'Pb': 207.2
 }
 
-# --- FUNGSI FORMATTING HASIL ---
-def format_hasil(nilai):
-    # Mengonversi titik menjadi koma
-    return f"{nilai:.4f}".replace('.', ',')
+# --- FUNGSI FORMATTING INDONESIA (MENGUBAH TITIK MENJADI KOMA) ---
+def format_koma(nilai):
+    return f"{nilai:.4f}".rstrip('0').rstrip('.').replace('.', ',')
 
-def format_mol(nilai):
-    # Mengonversi titik menjadi koma
-    return f"{nilai:.4f}".replace('.', ',')
-
-def format_volume(nilai):
-    # Mengonversi titik menjadi koma
-    return f"{nilai:.1f}".replace('.', ',')
+def format_koma_v(nilai):
+    return f"{nilai:.2f}".replace('.', ',')
 
 def hitung_bm_dari_teks(rumus):
     def parse_formula(f):
@@ -169,19 +135,17 @@ def hitung_bm_dari_teks(rumus):
             
     return total_bm, unsur_tidak_dikenal
 
-# --- JUDUL & IDENTITAS KELOMPOK ---
-st.title("🧪 Stoikiometri Kimia")
+# --- IDENTITAS KELOMPOK ---
+st.title("🧪 Aplikasi Stoikiometri Kimia")
 st.subheader("Mata Kuliah Logika Pemrograman dan Komputer")
 
 st.markdown("""
 <div class="identitas-box">
-    <span style="color: #0f766e; font-weight: bold; font-size: 1.1rem;">Kelompok 7:</span><br>
-    <table style="width:100%; border:none; margin-top:8px; color:#334155;">
-        <tr><td>1. 2560556 - AFFAN IHSANUL FATAH</td></tr>
-        <tr><td>2. 2560618 - ELVIA ELVARITTA</td></tr>
-        <tr><td>3. 2560675 - MUHAMMAD AQIL</td></tr>
-        <tr><td>4. 2560739 - RAFI ALIFIA SHARIATI</td></tr>
-        <tr><td>5. 2560796 - TIARA APRILIANTI</td></tr>
+    <span style="color: #0369a1; font-weight: bold; font-size: 1.05rem;">Kelompok 7:</span><br>
+    <table style="width:100%; border:none; margin-top:5px; color:#334155; font-size:0.95rem;">
+        <tr><td>1. 2560556 - AFFAN IHSANUL FATAH</td><td>2. 2560618 - ELVIA ELVARITTA</td></tr>
+        <tr><td>3. 2560765 - MUHAMMAD AQIL</td><td>4. 2560739 - RAFI ALIFIA SHARIATI</td></tr>
+        <tr><td>5. 2560796 - TIARA APRILIANTI</td><td></td></tr>
     </table>
 </div>
 """, unsafe_allow_html=True)
@@ -194,10 +158,10 @@ menu = st.sidebar.radio(
 )
 
 # ==========================================
-# FEATURE 1: BOBOT MOLEKUL (BM/Mr)
+# MENU 1: BOBOT MOLEKUL (BM/Mr)
 # ==========================================
 if menu == "Bobot Molekul (BM/Mr)":
-    st.header("🔬 Perhitungan Bobot Molekul Otomatis")
+    st.header("🔬 Perhitungan Bobot Molekul")
     st.write("Ketik rumus molekul senyawa kimia secara langsung untuk mengetahui berat molekulnya.")
     
     input_senyawa = st.text_input("Masukkan Rumus Kimia Senyawa (Contoh: H2SO4, Ca(OH)2, NaCl):", "H2SO4")
@@ -210,18 +174,17 @@ if menu == "Bobot Molekul (BM/Mr)":
             elif bm == 0:
                 st.warning("Format rumus tidak valid.")
             else:
-                st.success(f"Bobot Molekul (BM) dari {input_senyawa} adalah: {format_hasil(bm)} g/mol")
+                st.success(f"Bobot Molekul (BM) dari {input_senyawa} adalah: {format_koma(bm)} g/mol")
         else:
             st.warning("Silakan isi rumus kimia terlebih dahulu.")
 
 # ==========================================
-# FEATURE 2: REVISI KONVERSI SATUAN (DARI -> KE)
+# MENU 2: KONVERSI SATUAN KIMIA
 # ==========================================
 elif menu == "Konversi Satuan Kimia":
     st.header("🔄 Konversi Hubungan Satuan Kimia")
     st.write("Silakan tentukan satuan awal dan satuan tujuan konversi yang Anda inginkan.")
     
-    # Input parameter dasar senyawa
     c1, c2 = st.columns(2)
     with c1:
         mr_val = st.number_input("Massa Molar / Mr Senyawa (g/mol):", min_value=0.1, value=98.0, step=0.1)
@@ -244,44 +207,39 @@ elif menu == "Konversi Satuan Kimia":
 
     st.markdown("---")
     
-    # --- PERBAIKAN 2: LOGIKA KONVERSI MASSA KE MOL ---
     if satuan_asal == "Massa (gram)":
         g = st.number_input("Masukkan Nilai Massa (gram):", min_value=0.0, value=9.8)
-        
-        # Logika dinamis untuk volume
         if satuan_tujuan in ["Molaritas (M)", "Normalitas (N)"]:
-            v_ml = st.number_input("Masukkan Volume Larutan (mL) [Dibutuhkan untuk M dan N]:", min_value=0.1, value=100.0)
+            v_ml = st.number_input("Masukkan Volume Larutan (mL):", min_value=0.1, value=100.0)
         
         if st.button("Proses Konversi"):
-            mol = g / mr_val # Koreksi: Hitung mol dulu
-            molaritas = mol * (1000 / v_ml) if 'v_ml' in locals() else 0
-            normalitas = molaritas * val_val if 'v_ml' in locals() else 0
-            
+            mol = g / mr_val
             if satuan_tujuan == "Mol (mol)":
-                st.success(f"Hasil: {format_hasil(g)} gram = {format_mol(mol)} mol")
+                st.success(f"Hasil: {format_koma(g)} gram = {format_koma(mol)} mol")
             elif satuan_tujuan == "Molaritas (M)":
-                st.success(f"Hasil: {format_hasil(g)} gram dalam {format_volume(v_ml)} mL = {format_hasil(molaritas)} M")
+                molaritas = mol * (1000 / v_ml)
+                st.success(f"Hasil: {format_koma(g)} gram dalam {format_koma_v(v_ml)} mL = {format_koma(molaritas)} M")
             elif satuan_tujuan == "Normalitas (N)":
-                st.success(f"Hasil: {format_hasil(g)} gram dalam {format_volume(v_ml)} mL = {format_hasil(normalitas)} N")
+                molaritas = mol * (1000 / v_ml)
+                normalitas = molaritas * val_val
+                st.success(f"Hasil: {format_koma(g)} gram dalam {format_koma_v(v_ml)} mL = {format_koma(normalitas)} N")
 
     elif satuan_asal == "Mol (mol)":
         mol = st.number_input("Masukkan Nilai Jumlah Mol (mol):", min_value=0.0, value=0.1)
-        
-        # Logika dinamis untuk volume
         if satuan_tujuan in ["Molaritas (M)", "Normalitas (N)"]:
-            v_ml = st.number_input("Masukkan Volume Larutan (mL) [Dibutuhkan untuk M dan N]:", min_value=0.1, value=100.0)
+            v_ml = st.number_input("Masukkan Volume Larutan (mL):", min_value=0.1, value=100.0)
         
         if st.button("Proses Konversi"):
             g = mol * mr_val
-            molaritas = mol * (1000 / v_ml) if 'v_ml' in locals() else 0
-            normalitas = molaritas * val_val if 'v_ml' in locals() else 0
-            
             if satuan_tujuan == "Massa (gram)":
-                st.success(f"Hasil: {format_mol(mol)} mol = {format_hasil(g)} gram")
+                st.success(f"Hasil: {format_koma(mol)} mol = {format_koma(g)} gram")
             elif satuan_tujuan == "Molaritas (M)":
-                st.success(f"Hasil: {format_mol(mol)} mol dalam {format_volume(v_ml)} mL = {format_hasil(molaritas)} M")
+                molaritas = mol * (1000 / v_ml)
+                st.success(f"Hasil: {format_koma(mol)} mol dalam {format_koma_v(v_ml)} mL = {format_koma(molaritas)} M")
             elif satuan_tujuan == "Normalitas (N)":
-                st.success(f"Hasil: {format_mol(mol)} mol dalam {format_volume(v_ml)} mL = {format_hasil(normalitas)} N")
+                molaritas = mol * (1000 / v_ml)
+                normalitas = molaritas * val_val
+                st.success(f"Hasil: {format_koma(mol)} mol dalam {format_koma_v(v_ml)} mL = {format_koma(normalitas)} N")
 
     elif satuan_asal == "Molaritas (M)":
         molaritas = st.number_input("Masukkan Nilai Molaritas (M):", min_value=0.0, value=1.0)
@@ -293,11 +251,11 @@ elif menu == "Konversi Satuan Kimia":
             normalitas = molaritas * val_val
             
             if satuan_tujuan == "Massa (gram)":
-                st.success(f"Hasil: {format_hasil(molaritas)} M dalam {format_volume(v_ml)} mL = {format_hasil(g)} gram")
+                st.success(f"Hasil: {format_koma(molaritas)} M dalam {format_koma_v(v_ml)} mL = {format_koma(g)} gram")
             elif satuan_tujuan == "Mol (mol)":
-                st.success(f"Hasil: {format_hasil(molaritas)} M dalam {format_volume(v_ml)} mL = {format_mol(mol)} mol")
+                st.success(f"Hasil: {format_koma(molaritas)} M dalam {format_koma_v(v_ml)} mL = {format_koma(mol)} mol")
             elif satuan_tujuan == "Normalitas (N)":
-                st.success(f"Hasil: {format_hasil(molaritas)} M = {format_hasil(normalitas)} N")
+                st.success(f"Hasil: {format_koma(molaritas)} M = {format_koma(normalitas)} N")
 
     elif satuan_asal == "Normalitas (N)":
         normalitas = st.number_input("Masukkan Nilai Normalitas (N):", min_value=0.0, value=1.0)
@@ -309,17 +267,17 @@ elif menu == "Konversi Satuan Kimia":
             mol = (molaritas * v_ml) / 1000
             
             if satuan_tujuan == "Molaritas (M)":
-                st.success(f"Hasil: {format_hasil(normalitas)} N = {format_hasil(molaritas)} M")
+                st.success(f"Hasil: {format_koma(normalitas)} N = {format_koma(molaritas)} M")
             elif satuan_tujuan == "Massa (gram)":
-                st.success(f"Hasil: {format_hasil(normalitas)} N dalam {format_volume(v_ml)} mL = {format_hasil(g)} gram")
+                st.success(f"Hasil: {format_koma(normalitas)} N dalam {format_koma_v(v_ml)} mL = {format_koma(g)} gram")
             elif satuan_tujuan == "Mol (mol)":
-                st.success(f"Hasil: {format_hasil(normalitas)} N dalam {format_volume(v_ml)} mL = {format_mol(mol)} mol")
+                st.success(f"Hasil: {format_koma(normalitas)} N dalam {format_koma_v(v_ml)} mL = {format_koma(mol)} mol")
 
 # ==========================================
-# FEATURE 3: FAKTOR PENGENCERAN
+# MENU 3: FAKTOR PENGENCERAN
 # ==========================================
 elif menu == "Faktor Pengenceran":
-    st.header("🧪 Perhitungan Faktor Pengenceran")
+    st.header("🧪 Perhitungan Pengenceran")
     st.write("Gunakan rumus pengenceran murni $V_1 \\times M_1 = V_2 \\times M_2$")
     
     target_cari = st.selectbox(
@@ -334,17 +292,14 @@ elif menu == "Faktor Pengenceran":
     
     st.markdown("### 📝 Kotak Input Parameter")
     
-    # Modifikasi pelabelan form input agar eksplisit dan mudah dibaca user
     if target_cari == "Konsentrasi Larutan Pekat (M1)":
         v1 = st.number_input("Masukkan Volume Larutan Pekat yang diambil (V1) dalam mL:", min_value=0.01, value=10.0)
-        m2 = st.number_input("Masukkan Konsentrasi Larutan Encer Terbentuk (M2):", min_value=0.01, value=0.1)
+        m2 = st.number_input("Masukkan Konsentrasi Larutan Encer Terbentuk (M2):", min_value=0.01, value=0.14)
         v2 = st.number_input("Masukkan Volume Larutan Encer Terbentuk (V2) dalam mL:", min_value=0.01, value=100.0)
         
         if st.button("Hitung M1"):
             m1 = (m2 * v2) / v1
-            st.success(f"Hasil Perhitungan: Konsentrasi Larutan Pekat Asal (M1) = {format_hasil(m1)} M (atau N)")
-            # --- PERBAIKAN 1: HAPUS TULISAN FAKTOR PENGENCERAN ---
-            # st.info(f"Faktor Pengenceran yang dilakukan: {format_hasil(v2/v1)} kali")
+            st.success(f"Hasil Perhitungan: Konsentrasi Larutan Pekat Asal (M1) = {format_koma(m1)} M (atau N)")
             
     elif target_cari == "Volume Larutan Pekat (V1)":
         m1 = st.number_input("Masukkan Konsentrasi Larutan Pekat Asal (M1):", min_value=0.01, value=12.0)
@@ -354,10 +309,9 @@ elif menu == "Faktor Pengenceran":
         if st.button("Hitung V1"):
             if m1 >= m2:
                 v1 = (m2 * v2) / m1
-                st.success(f"Hasil Perhitungan: Ambil {format_hasil(v1)} mL larutan pekat (V1), lalu encerkan hingga {format_volume(v2)} mL.")
-                # st.info(f"Faktor Pengenceran: {format_hasil(m1/m2)} kali")
+                st.success(f"Hasil Perhitungan: Ambil {format_koma(v1)} mL larutan pekat (V1), lalu encerkan hingga {format_koma_v(v2)} mL.")
             else:
-                st.error("Gagal: Konsentrasi awal (M1) tidak boleh lebih kecil dari konsentrasi encer (M2)!")
+                st.error("Gagal: Konsentrasi awal (M1) tidak boleh lebih kecil dari... (M2)!")
 
     elif target_cari == "Konsentrasi Larutan Encer (M2)":
         m1 = st.number_input("Masukkan Konsentrasi Larutan Pekat Asal (M1):", min_value=0.01, value=2.0)
@@ -367,8 +321,7 @@ elif menu == "Faktor Pengenceran":
         if st.button("Hitung M2"):
             if v2 >= v1:
                 m2 = (m1 * v1) / v2
-                st.success(f"Hasil Perhitungan: Konsentrasi Larutan Setelah Diencerkan (M2) = {format_hasil(m2)} M (atau N)")
-                # st.info(f"Faktor Pengenceran: {format_hasil(v2/v1)} kali")
+                st.success(f"Hasil Perhitungan: Konsentrasi Larutan Setelah Diencerkan (M2) = {format_koma(m2)} M (atau N)")
             else:
                 st.error("Gagal: Volume akhir (V2) harus lebih besar daripada volume awal (V1)!")
 
@@ -380,10 +333,9 @@ elif menu == "Faktor Pengenceran":
         if st.button("Hitung V2"):
             if m1 >= m2:
                 v2 = (m1 * v1) / m2
-                st.success(f"Hasil Perhitungan: Volume Akhir Larutan Encer (V2) = {format_volume(v2)} mL")
-                st.info(f"Tambahkan air aquades sebanyak {format_volume(v2 - v1)} mL ke dalam labu takar.")
+                st.success(f"Hasil Perhitungan: Volume Akhir Larutan Encer (V2) = {format_koma_v(v2)} mL")
             else:
-                st.error("Gagal: Konsentrasi awal (M1) tidak boleh lebih kecil dari konsentrasi encer (M2)!")
+                st.error("Gagal: Konsentrasi awal (M1) tidak boleh lebih kecil dari... (M2)!")
 
 # --- FOOTER ---
 st.markdown("---")
