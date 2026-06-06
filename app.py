@@ -134,11 +134,12 @@ def hitung_bm_dari_teks(rumus):
     return total_bm, unsur_tidak_dikenal, cara_teks
 
 # ==========================================
-# HALAMAN UTAMA (SELALU MUNCUL DI ATAS)
+# HALAMAN UTAMA (KOMPONEN PERMANEN)
 # ==========================================
 st.title("🧪 Kalkulator Kimia")
 st.markdown("### Perhitungan Bobot Molekul, Konversi Satuan, dan Faktor Pengenceran")
 
+# SEKARANG KOTAK IDENTITAS INI BERSIFAT PERMANEN DI ATAS (TIDAK AKAN HILANG)
 st.markdown("""
 <div class="identitas-box">
     <div style="color: #0369a1; font-weight: bold; font-size: 1.1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-bottom: 10px;">
@@ -146,6 +147,7 @@ st.markdown("""
     </div>
     <table style="width:100%; border:none; color:#334155; font-size:0.95rem; line-height: 1.6;">
         <tr><td style="width: 25%; font-weight: bold;">Mata Kuliah</td><td>: Logika Pemrograman dan Komputer</td></tr>
+        <tr><td style="font-weight: bold;">Kelas</td><td style="color: #0d9488; font-weight: bold;">: 1A</td></tr>
         <tr><td style="font-weight: bold;">Kelompok</td><td>: Kelompok 7</td></tr>
         <tr><td style="vertical-align: top; font-weight: bold;">Anggota</td><td>: 
             <table style="width:100%; margin-top:-2px; border:none; color:#334155;">
@@ -159,7 +161,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# SIDEBAR NAVIGASI MENU (3 POIN UTAMA)
+# SIDEBAR NAVIGASI MENU
 # ==========================================
 st.sidebar.header("🧭 Menu Fitur")
 menu = st.sidebar.radio(
@@ -205,7 +207,7 @@ elif menu == "1. Perhitungan Bobot Molekul (BM/Mr)":
             st.warning("Silakan isi rumus kimia terlebih dahulu.")
 
 # ==========================================
-# MENU 2: KONVERSI SATUAN KIMIA (FIXED!)
+# MENU 2: KONVERSI SATUAN KIMIA
 # ==========================================
 elif menu == "2. Konversi Satuan Kimia":
     st.header("🔄 Konversi Hubungan Satuan Kimia")
@@ -228,12 +230,12 @@ elif menu == "2. Konversi Satuan Kimia":
     
     col_from, col_to = st.columns(2)
     with col_from:
-        satuan_asal = st.selectbox("Pilih Satuan Asal (Yang Diketahui):", daftar_satuan, index=5) # Default diubah ke % b/b untuk testing langsung
+        satuan_asal = st.selectbox("Pilih Satuan Asal (Yang Diketahui):", daftar_satuan, index=5)
     with col_to:
         daftar_tujuan = daftar_satuan.copy()
         if satuan_asal in daftar_tujuan:
             daftar_tujuan.remove(satuan_asal)
-        satuan_tujuan = st.selectbox("Pilih Satuan Tujuan (Yang Dicari):", daftar_tujuan, index=4) # Default diubah ke ppm
+        satuan_tujuan = st.selectbox("Pilih Satuan Tujuan (Yang Dicari):", daftar_tujuan, index=4)
 
     st.markdown("---")
     
@@ -256,18 +258,16 @@ elif menu == "2. Konversi Satuan Kimia":
         langkah_ke_molaritas = ""
         langkah_ke_tujuan = ""
         
-        # --- PERBAIKAN LOGIKA SPESIFIK: Hubungan Langsung % b/b dan ppm ---
         if satuan_asal == "Persen Bobot (% b/b)" and satuan_tujuan == "Part Per Million (ppm)":
             hasil_akhir = nilai_asal * 10000
             langkah_ke_molaritas = f"1. Mengubah Persen Bobot (% b/b) langsung ke ppm:"
             langkah_ke_tujuan = f"   Rumus mutlak: ppm = % b/b * 10.000\n   ppm = {format_koma(nilai_asal)} * 10.000 = {format_koma(hasil_akhir)} ppm"
             
-        elif satuan_asal == "Part Per Million (ppm)" and satuan_tujuan == "Persen Bobot (% b/b)":
+        elif satuan_asal == "Part Per Million (ppm)" and tokens_tujuan == "Persen Bobot (% b/b)":
             hasil_akhir = nilai_asal / 10000
             langkah_ke_molaritas = f"1. Mengubah ppm langsung ke Persen Bobot (% b/b):"
             langkah_ke_tujuan = f"   Rumus mutlak: % b/b = ppm / 10.000\n   % b/b = {format_koma(nilai_asal)} / 10.000 = {format_koma(hasil_akhir)} %"
             
-        # --- LOGIKA KONVERSI LAINNYA JIKA MELALUI JEMBATAN MOLARITAS ---
         else:
             molaritas_pusat = 0.0
             if satuan_asal == "Molaritas (M)":
@@ -398,4 +398,4 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
 
 # --- FOOTER ---
 st.markdown("---")
-st.caption("Aplikasi Logika Pemrograman & Komputer | Kelompok 7 | ©️ 2026")
+st.caption("Aplikasi Logika Pemrograman & Komputer | Kelas 1A - Kelompok 7 | ©️ 2026")
