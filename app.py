@@ -174,9 +174,6 @@ menu = st.sidebar.radio(
 
 st.markdown("---")
 
-# ==========================================
-# KONDISI JIKA BELUM MEMILIH MENU
-# ==========================================
 if menu == "Silakan Pilih...":
     st.info("💡 **Petunjuk Penggunaan:** Silakan gunakan **Menu Fitur** di sebelah kiri (sidebar) untuk memilih jenis kalkulator kimia yang ingin Anda operasikan.")
 
@@ -208,7 +205,7 @@ elif menu == "1. Perhitungan Bobot Molekul (BM/Mr)":
             st.warning("Silakan isi rumus kimia terlebih dahulu.")
 
 # ==========================================
-# MENU 2: KONVERSI SATUAN KIMIA
+# MENU 2: KONVERSI SATUAN KIMIA (FIXED!)
 # ==========================================
 elif menu == "2. Konversi Satuan Kimia":
     st.header("🔄 Konversi Hubungan Satuan Kimia")
@@ -231,16 +228,16 @@ elif menu == "2. Konversi Satuan Kimia":
     
     col_from, col_to = st.columns(2)
     with col_from:
-        satuan_asal = st.selectbox("Pilih Satuan Asal (Yang Diketahui):", daftar_satuan, index=2)
+        satuan_asal = st.selectbox("Pilih Satuan Asal (Yang Diketahui):", daftar_satuan, index=5) # Default diubah ke % b/b untuk testing langsung
     with col_to:
         daftar_tujuan = daftar_satuan.copy()
         if satuan_asal in daftar_tujuan:
             daftar_tujuan.remove(satuan_asal)
-        satuan_tujuan = st.selectbox("Pilih Satuan Tujuan (Yang Dicari):", daftar_tujuan, index=2)
+        satuan_tujuan = st.selectbox("Pilih Satuan Tujuan (Yang Dicari):", daftar_tujuan, index=4) # Default diubah ke ppm
 
     st.markdown("---")
     
-    nilai_asal = st.number_input(f"Masukkan Nilai dari {satuan_asal}:", min_value=0.0, value=1.0, step=0.1)
+    nilai_asal = st.number_input(f"Masukkan Nilai dari {satuan_asal}:", min_value=0.0, value=0.05, format="%.4f", step=0.01)
     
     butuh_volume = [
         ("Massa (gram)", "Molaritas (M)"), ("Massa (gram)", "Normalitas (N)"), ("Massa (gram)", "Part Per Million (ppm)"),
@@ -255,52 +252,63 @@ elif menu == "2. Konversi Satuan Kimia":
         v_ml = st.number_input("Masukkan Volume Larutan (mL):", min_value=0.1, value=1000.0, step=50.0)
 
     if st.button("Proses Konversi Satuan"):
-        molaritas_pusat = 0.0
-        langkah_ke_molaritas = ""
-        
-        if satuan_asal == "Molaritas (M)":
-            molaritas_pusat = nilai_asal
-            langkah_ke_molaritas = f"Satuan asal sudah dalam Molaritas = {format_koma(molaritas_pusat)} M."
-        elif satuan_asal == "Massa (gram)":
-            molaritas_pusat = (nilai_asal / mr_val) * (1000 / v_ml)
-            langkah_ke_molaritas = f"1. Mengubah Massa ke Molaritas:\n   M = (gram / Mr) * (1000 / V_mL)\n   M = ({format_koma(nilai_asal)} / {format_koma(mr_val)}) * (1000 / {format_koma_v(v_ml)}) = {format_koma(molaritas_pusat)} M"
-        elif satuan_asal == "Mol (mol)":
-            molaritas_pusat = nilai_asal * (1000 / v_ml)
-            langkah_ke_molaritas = f"1. Mengubah Mol ke Molaritas:\n   M = mol * (1000 / V_mL)\n   M = {format_koma(nilai_asal)} * (1000 / {format_koma_v(v_ml)}) = {format_koma(molaritas_pusat)} M"
-        elif satuan_asal == "Normalitas (N)":
-            molaritas_pusat = nilai_asal / val_val
-            langkah_ke_molaritas = f"1. Mengubah Normalitas ke Molaritas:\n   M = N / Valensi\n   M = {format_koma(nilai_asal)} / {val_val} = {format_koma(molaritas_pusat)} M"
-        elif satuan_asal == "Part Per Million (ppm)":
-            molaritas_pusat = nilai_asal / (mr_val * 1000)
-            langkah_ke_molaritas = f"1. Mengubah ppm ke Molaritas:\n   M = ppm / (Mr * 1000)\n   M = {format_koma(nilai_asal)} / ({format_koma(mr_val)} * 1000) = {format_koma(molaritas_pusat)} M"
-        elif satuan_asal == "Persen Massa (% b/b)":
-            molaritas_pusat = (nilai_asal * rho_val * 10) / mr_val
-            langkah_ke_molaritas = f"1. Mengubah % b/b ke Molaritas:\n   M = (% * ρ * 10) / Mr\n   M = ({format_koma(nilai_asal)} * {format_koma(rho_val)} * 10) / {format_koma(mr_val)} = {format_koma(molaritas_pusat)} M"
-
         hasil_akhir = 0.0
+        langkah_ke_molaritas = ""
         langkah_ke_tujuan = ""
         
-        if satuan_tujuan == "Molaritas (M)":
-            hasil_akhir = molaritas_pusat
-            langkah_ke_tujuan = f"2. Satuan target adalah Molaritas = {format_koma(hasil_akhir)} M"
-        elif satuan_tujuan == "Massa (gram)":
-            hasil_akhir = (molaritas_pusat * mr_val * v_ml) / 1000
-            langkah_ke_tujuan = f"2. Mengubah Molaritas ke Massa:\n   gram = (M * Mr * V_mL) / 1000\n   gram = ({format_koma(molaritas_pusat)} * {format_koma(mr_val)} * {format_koma_v(v_ml)}) / 1000 = {format_koma(hasil_akhir)} gram"
-        elif satuan_tujuan == "Mol (mol)":
-            hasil_akhir = (molaritas_pusat * v_ml) / 1000
-            langkah_ke_tujuan = f"2. Mengubah Molaritas ke Jumlah Mol:\n   mol = (M * V_mL) / 1000\n   mol = ({format_koma(molaritas_pusat)} * {format_koma_v(v_ml)}) / 1000 = {format_koma(hasil_akhir)} mol"
-        elif satuan_tujuan == "Normalitas (N)":
-            hasil_akhir = molaritas_pusat * val_val
-            langkah_ke_tujuan = f"2. Mengubah Molaritas ke Normalitas:\n   N = M * Valensi\n   N = {format_koma(molaritas_pusat)} * {val_val} = {format_koma(hasil_akhir)} N"
-        elif satuan_tujuan == "Part Per Million (ppm)":
-            hasil_akhir = molaritas_pusat * mr_val * 1000
-            langkah_ke_tujuan = f"2. Mengubah Molaritas ke ppm:\n   ppm = M * Mr * 1000\n   ppm = {format_koma(molaritas_pusat)} * {format_koma(mr_val)} * 1000 = {format_koma(hasil_akhir)} ppm"
-        elif satuan_tujuan == "Persen Massa (% b/b)":
-            hasil_akhir = (molaritas_pusat * mr_val) / (rho_val * 10)
-            langkah_ke_tujuan = f"2. Mengubah Molaritas ke % b/b:\n   % b/b = (M * Mr) / (ρ * 10)\n   % b/b = ({format_koma(molaritas_pusat)} * {format_koma(mr_val)}) / ({format_koma(rho_val)} * 10) = {format_koma(hasil_akhir)} %"
+        # --- PERBAIKAN LOGIKA SPESIFIK: Hubungan Langsung % b/b dan ppm ---
+        if satuan_asal == "Persen Bobot (% b/b)" and satuan_tujuan == "Part Per Million (ppm)":
+            hasil_akhir = nilai_asal * 10000
+            langkah_ke_molaritas = f"1. Mengubah Persen Bobot (% b/b) langsung ke ppm:"
+            langkah_ke_tujuan = f"   Rumus mutlak: ppm = % b/b * 10.000\n   ppm = {format_koma(nilai_asal)} * 10.000 = {format_koma(hasil_akhir)} ppm"
+            
+        elif satuan_asal == "Part Per Million (ppm)" and satuan_tujuan == "Persen Bobot (% b/b)":
+            hasil_akhir = nilai_asal / 10000
+            langkah_ke_molaritas = f"1. Mengubah ppm langsung ke Persen Bobot (% b/b):"
+            langkah_ke_tujuan = f"   Rumus mutlak: % b/b = ppm / 10.000\n   % b/b = {format_koma(nilai_asal)} / 10.000 = {format_koma(hasil_akhir)} %"
+            
+        # --- LOGIKA KONVERSI LAINNYA JIKA MELALUI JEMBATAN MOLARITAS ---
+        else:
+            molaritas_pusat = 0.0
+            if satuan_asal == "Molaritas (M)":
+                molaritas_pusat = nilai_asal
+                langkah_ke_molaritas = f"1. Satuan asal sudah dalam Molaritas = {format_koma(molaritas_pusat)} M."
+            elif satuan_asal == "Massa (gram)":
+                molaritas_pusat = (nilai_asal / mr_val) * (1000 / v_ml)
+                langkah_ke_molaritas = f"1. Mengubah Massa ke Molaritas:\n   M = (gram / Mr) * (1000 / V_mL)\n   M = ({format_koma(nilai_asal)} / {format_koma(mr_val)}) * (1000 / {format_koma_v(v_ml)}) = {format_koma(molaritas_pusat)} M"
+            elif satuan_asal == "Mol (mol)":
+                molaritas_pusat = nilai_asal * (1000 / v_ml)
+                langkah_ke_molaritas = f"1. Mengubah Mol ke Molaritas:\n   M = mol * (1000 / V_mL)\n   M = {format_koma(nilai_asal)} * (1000 / {format_koma_v(v_ml)}) = {format_koma(molaritas_pusat)} M"
+            elif satuan_asal == "Normalitas (N)":
+                molaritas_pusat = nilai_asal / val_val
+                langkah_ke_molaritas = f"1. Mengubah Normalitas ke Molaritas:\n   M = N / Valensi\n   M = {format_koma(nilai_asal)} / {val_val} = {format_koma(molaritas_pusat)} M"
+            elif satuan_asal == "Part Per Million (ppm)":
+                molaritas_pusat = nilai_asal / (mr_val * 1000)
+                langkah_ke_molaritas = f"1. Mengubah ppm ke Molaritas:\n   M = ppm / (Mr * 1000)\n   M = {format_koma(nilai_asal)} / ({format_koma(mr_val)} * 1000) = {format_koma(molaritas_pusat)} M"
+            elif satuan_asal == "Persen Bobot (% b/b)":
+                molaritas_pusat = (nilai_asal * rho_val * 10) / mr_val
+                langkah_ke_molaritas = f"1. Mengubah % b/b ke Molaritas:\n   M = (% * ρ * 10) / Mr\n   M = ({format_koma(nilai_asal)} * {format_koma(rho_val)} * 10) / {format_koma(mr_val)} = {format_koma(molaritas_pusat)} M"
+
+            if satuan_tujuan == "Molaritas (M)":
+                hasil_akhir = molaritas_pusat
+                langkah_ke_tujuan = f"2. Satuan target adalah Molaritas = {format_koma(hasil_akhir)} M"
+            elif satuan_tujuan == "Massa (gram)":
+                hasil_akhir = (molaritas_pusat * mr_val * v_ml) / 1000
+                langkah_ke_tujuan = f"2. Mengubah Molaritas ke Massa:\n   gram = (M * Mr * V_mL) / 1000\n   gram = ({format_koma(molaritas_pusat)} * {format_koma(mr_val)} * {format_koma_v(v_ml)}) / 1000 = {format_koma(hasil_akhir)} gram"
+            elif satuan_tujuan == "Mol (mol)":
+                hasil_akhir = (molaritas_pusat * v_ml) / 1000
+                langkah_ke_tujuan = f"2. Mengubah Molaritas ke Jumlah Mol:\n   mol = (M * V_mL) / 1000\n   mol = ({format_koma(molaritas_pusat)} * {format_koma_v(v_ml)}) / 1000 = {format_koma(hasil_akhir)} mol"
+            elif satuan_tujuan == "Normalitas (N)":
+                hasil_akhir = molaritas_pusat * val_val
+                langkah_ke_tujuan = f"2. Mengubah Molaritas ke Normalitas:\n   N = M * Valensi\n   N = {format_koma(molaritas_pusat)} * {val_val} = {format_koma(hasil_akhir)} N"
+            elif satuan_tujuan == "Part Per Million (ppm)":
+                hasil_akhir = molaritas_pusat * mr_val * 1000
+                langkah_ke_tujuan = f"2. Mengubah Molaritas ke ppm:\n   ppm = M * Mr * 1000\n   ppm = {format_koma(molaritas_pusat)} * {format_koma(mr_val)} * 1000 = {format_koma(hasil_akhir)} ppm"
+            elif satuan_tujuan == "Persen Bobot (% b/b)":
+                hasil_akhir = (molaritas_pusat * mr_val) / (rho_val * 10)
+                langkah_ke_tujuan = f"2. Mengubah Molaritas ke % b/b:\n   % b/b = (M * Mr) / (ρ * 10)\n   % b/b = ({format_koma(molaritas_pusat)} * {format_koma(mr_val)}) / ({format_koma(rho_val)} * 10) = {format_koma(hasil_akhir)} %"
 
         st.success(f"Hasil Konversi: {format_koma(nilai_asal)} {satuan_asal} = {format_koma(hasil_akhir)} {satuan_tujuan}")
-        
         st.markdown("### 📝 Langkah Perhitungan Berdasarkan Alur Logika:")
         st.info(f"{langkah_ke_molaritas}\n\n{langkah_ke_tujuan}")
 
@@ -331,7 +339,6 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
         if st.button("Hitung M1"):
             m1 = (m2 * v2) / v1
             st.success(f"Hasil Perhitungan: Konsentrasi Larutan Pekat Asal (M1) = {format_koma(m1)} M (atau N)")
-            
             st.markdown("### 📝 Langkah Perhitungan:")
             st.info(f"**Rumus Dasar:** V1 * M1 = V2 * M2\n\n"
                     f"**Turunan Rumus:** M1 = (M2 * V2) / V1\n\n"
@@ -347,7 +354,6 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
             if m1 >= m2:
                 v1 = (m2 * v2) / m1
                 st.success(f"Hasil Perhitungan: Ambil {format_koma(v1)} mL larutan pekat (V1), lalu encerkan hingga {format_koma_v(v2)} mL.")
-                
                 st.markdown("### 📝 Langkah Perhitungan:")
                 st.info(f"**Rumus Dasar:** V1 * M1 = V2 * M2\n\n"
                         f"**Turunan Rumus:** V1 = (M2 * V2) / M1\n\n"
@@ -365,7 +371,6 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
             if v2 >= v1:
                 m2 = (m1 * v1) / v2
                 st.success(f"Hasil Perhitungan: Konsentrasi Larutan Setelah Diencerkan (M2) = {format_koma(m2)} M (atau N)")
-                
                 st.markdown("### 📝 Langkah Perhitungan:")
                 st.info(f"**Rumus Dasar:** V1 * M1 = V2 * M2\n\n"
                         f"**Turunan Rumus:** M2 = (M1 * V1) / V2\n\n"
@@ -376,22 +381,4 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
 
     elif target_cari == "Volume Larutan Encer (V2)":
         m1 = st.number_input("Masukkan Konsentrasi Larutan Pekat Asal (M1):", min_value=0.01, value=6.0)
-        v1 = st.number_input("Masukkan Volume Larutan Pekat yang diambil (V1) dalam mL:", min_value=0.01, value=10.0)
-        m2 = st.number_input("Masukkan Konsentrasi Larutan Encer yang Diinginkan (M2):", min_value=0.01, value=0.1)
-        
-        if st.button("Hitung V2"):
-            if m1 >= m2:
-                v2 = (m1 * v1) / m2
-                st.success(f"Hasil Perhitungan: Volume Akhir Larutan Encer (V2) = {format_koma_v(v2)} mL")
-                
-                st.markdown("### 📝 Langkah Perhitungan:")
-                st.info(f"**Rumus Dasar:** V1 * M1 = V2 * M2\n\n"
-                        f"**Turunan Rumus:** V2 = (M1 * V1) / M2\n\n"
-                        f"**Proses Hitung:** V2 = ({format_koma(m1)} * {format_koma_v(v1)}) / {format_koma(m2)}\n\n"
-                        f"**Hasil Akhir:** {format_koma_v(v2)} mL")
-            else:
-                st.error("Gagal: Konsentrasi awal (M1) tidak boleh lebih kecil dari konsentrasi akhir (M2)!")
-
-# --- FOOTER ---
-st.markdown("---")
-st.caption("Aplikasi Logika Pemrograman & Komputer | Kelompok 7 | © 2026")
+        v1 = st.number
