@@ -8,33 +8,33 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- REVISI TOTAL: GRADASI & ELEMEN KIMIA MURNI CSS/SVG ---
+# --- REVISI TOTAL: BACKGROUND ANIMASI MOLEKUL & GLASSMORPHISM ---
 st.markdown("""
     <style>
-    /* Background dengan gradasi warna Lembut: Biru -> Putih -> Kuning */
+    /* 1. Background Utama dengan Gradasi Lab Kimia Modern */
     .stApp {
-        background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 50%, #fef9c3 100%) !important;
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%) !important;
         background-attachment: fixed !important;
-        color: #1e293b;
+        color: #f1f5f9;
     }
 
-    /* Elemen Grafis Kimia Transparan Langsung via SVG */
+    /* 2. Animasi Partikel Molekul Bergerak di Latar Belakang */
     .stApp::before {
         content: "";
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        top: 0; left: 0; width: 100%; height: 100%;
         pointer-events: none;
-        opacity: 0.08;
         z-index: 0;
+        opacity: 0.15;
         background-image: 
-            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%230284c7' stroke-width='3'%3E%3Cpath d='M80 650 L140 650 L120 530 L100 530 Z' /%3E%3Cpath d='M100 560 L140 560 M105 590 L135 590 M110 620 L130 620' /%3E%3Ccircle cx='190' cy='520' r='12' /%3E%3Ccircle cx='250' cy='490' r='18' /%3E%3Ccircle cx='290' cy='540' r='10' /%3E%3Cline x1='190' y1='520' x2='235' y2='495' /%3E%3Cline x1='250' y1='490' x2='290' y2='530' /%3E%3C/g%3E%3C/svg%3E"),
-            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%230369a1' stroke-width='2.5'%3E%3Cpath d='M680 150 L680 190 L630 300 L730 300 L680 190' /%3E%3Cpath d='M645 270 L715 270 M655 240 L705 240' /%3E%3Cpolygon points='600,100 640,80 680,100 680,140 640,160 600,140' /%3E%3Cpolygon points='560,140 600,160 600,200 560,220 520,200 520,140' /%3E%3C/g%3E%3C/svg%3E");
-        background-position: left bottom, right top;
-        background-repeat: no-repeat;
-        background-size: 380px, 380px;
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800'%3E%3Cg fill='%2338bdf8'%3E%3Ccircle cx='400' cy='400' r='15'/%3E%3Ccircle cx='200' cy='200' r='10'/%3E%3Ccircle cx='600' cy='200' r='12'/%3E%3Ccircle cx='300' cy='600' r='8'/%3E%3Ccircle cx='550' cy='550' r='14'/%3E%3Cline x1='400' y1='400' x2='200' y2='200' stroke='%2338bdf8' stroke-width='2'/%3E%3Cline x1='400' y1='400' x2='600' y2='200' stroke='%2338bdf8' stroke-width='2'/%3E%3Cline x1='400' y1='400' x2='300' y2='600' stroke='%2338bdf8' stroke-width='2'/%3E%3Cline x1='400' y1='400' x2='550' y2='550' stroke='%2338bdf8' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: 450px;
+        animation: floatBackground 25s linear infinite;
+    }
+
+    @keyframes floatBackground {
+        0% { background-position: 0px 0px; }
+        100% { background-position: 450px 450px; }
     }
     
     .main .block-container {
@@ -42,37 +42,56 @@ st.markdown("""
         z-index: 1;
     }
     
+    /* 3. Desain Sidebar Transparan Elegan */
     div[data-testid="stSidebar"] {
-        background-color: rgba(255, 255, 255, 0.9) !important;
-        border-right: 1px solid #e2e8f0;
+        background-color: rgba(15, 23, 42, 0.85) !important;
+        border-right: 1px solid rgba(56, 189, 248, 0.2);
     }
     
+    /* 4. Pewarnaan Teks Judul (Glow Effect) */
     h1, h2, h3 {
-        color: #0369a1 !important;
-        font-weight: 700;
+        color: #38bdf8 !important;
+        font-weight: 800;
+        text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
     }
     
+    /* 5. Efek Kaca (Glassmorphism) untuk Kotak Identitas */
     .identitas-box {
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 12px;
-        border-left: 5px solid #0ea5e9;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 22px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         margin-top: 10px;
         margin-bottom: 25px;
     }
     
+    /* 6. Tombol Interaktif dengan Efek Transisi Warna */
     .stButton>button {
-        background-color: #0ea5e9 !important;
+        background: linear-gradient(90deg, #0ea5e9 0%, #2563eb 100%) !important;
         color: white !important;
-        border-radius: 8px !important;
+        border-radius: 10px !important;
         font-weight: bold !important;
         border: none !important;
         width: 100%;
-        padding: 10px 0px;
+        padding: 12px 0px;
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        transition: all 0.3s ease;
     }
     .stButton>button:hover {
-        background-color: #0284c7 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        background: linear-gradient(90deg, #2563eb 0%, #0ea5e9 100%) !important;
+    }
+
+    /* Mengubah warna teks input bawaan streamlit agar kontras */
+    label, p, span {
+        color: #e2e8f0 !important;
+    }
+    div[data-testid="stMarkdownContainer"] p {
+        color: #e2e8f0 !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -131,15 +150,15 @@ st.markdown("### Perhitungan Bobot Molekul, Konversi Satuan, dan Faktor Pengence
 
 st.markdown("""
 <div class="identitas-box">
-    <div style="color: #0369a1; font-weight: bold; font-size: 1.1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-bottom: 10px;">
+    <div style="color: #38bdf8; font-weight: bold; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 10px;">
         📄 INFORMASI PROJECT MAKALAH
     </div>
-    <table style="width:100%; border:none; color:#334155; font-size:0.95rem; line-height: 1.6;">
-        <tr><td style="width: 25%; font-weight: bold;">Mata Kuliah</td><td>: Logika Pemrograman dan Komputer</td></tr>
-        <tr><td style="font-weight: bold;">Kelas</td><td style="color: #0d9488; font-weight: bold;">: 1A</td></tr>
-        <tr><td style="font-weight: bold;">Kelompok</td><td>: Kelompok 7</td></tr>
-        <tr><td style="vertical-align: top; font-weight: bold;">Anggota</td><td>: 
-            <table style="width:100%; margin-top:-2px; border:none; color:#334155;">
+    <table style="width:100%; border:none; color:#cbd5e1; font-size:0.95rem; line-height: 1.6;">
+        <tr><td style="width: 25%; font-weight: bold; color: #38bdf8;">Mata Kuliah</td><td>: Logika Pemrograman dan Komputer</td></tr>
+        <tr><td style="font-weight: bold; color: #38bdf8;">Kelas</td><td style="color: #34d399; font-weight: bold;">: 1A</td></tr>
+        <tr><td style="font-weight: bold; color: #38bdf8;">Kelompok</td><td>: Kelompok 7</td></tr>
+        <tr><td style="vertical-align: top; font-weight: bold; color: #38bdf8;">Anggota</td><td>: 
+            <table style="width:100%; margin-top:-2px; border:none; color:#cbd5e1;">
                 <tr><td>• 2560556 - AFFAN IHSANUL FATAH</td><td>• 2560618 - ELVIA ELVARITTA</td></tr>
                 <tr><td>• 2560765 - MUHAMMAD AQIL</td><td>• 2560739 - RAFI ALIFIA SHARIATI</td></tr>
                 <tr><td>• 2560796 - TIARA APRILIANTI</td><td></td></tr>
