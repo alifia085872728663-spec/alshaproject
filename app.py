@@ -187,9 +187,9 @@ elif menu == "1. Perhitungan Bobot Molekul (BM/Mr)":
             else:
                 st.success(f"Bobot Molekul (BM) dari {input_senyawa} adalah: {format_koma(bm)} g/mol")
                 st.markdown("### 📝 Langkah Perhitungan Matematis:")
-                st.latex(f"\\text{{Mr }} {input_senyawa} = \\sum (\\text{{Jumlah Atom}} \\times \\text{{Ar}})")
-                st.latex(f"\\text{{Mr }} {input_senyawa} = {cara_teks}")
-                st.latex(f"\\text{{Hasil Akhir}} = {format_koma(bm)} \\text{{ g/mol}}")
+                st.latex(r"\text{Mr } \text{" + input_senyawa + r"} = \sum (\text{Jumlah Atom} \times \text{Ar})")
+                st.latex(r"\text{Mr } \text{" + input_senyawa + r"} = " + cara_teks)
+                st.latex(r"\text{Hasil Akhir} = " + format_koma(bm) + r"\text{ g/mol}")
         else:
             st.warning("Silakan isi rumus kimia terlebih dahulu.")
 
@@ -247,14 +247,14 @@ elif menu == "2. Konversi Satuan Kimia":
         if satuan_asal == "Persen Bobot (% b/b)" and satuan_tujuan == "Part Per Million (ppm)":
             hasil_akhir = nilai_asal * 10000
             st.markdown("**1. Mengubah Persen Bobot (% b/b) langsung ke Part Per Million (ppm):**")
-            st.latex(f"\\text{{ppm}} = \\% \\text{{ b/b}} \\times 10.000")
-            st.latex(f"\\text{{ppm}} = {format_koma(nilai_asal)}\\% \\times 10.000 = {format_koma(hasil_akhir)}\\text{{ ppm}}")
+            st.latex(r"\text{ppm} = \% \text{ b/b} \times 10.000")
+            st.latex(r"\text{ppm} = " + format_koma(nilai_asal) + r"\% \times 10.000 = " + format_koma(hasil_akhir) + r"\text{ ppm}")
             
         elif satuan_asal == "Part Per Million (ppm)" and satuan_tujuan == "Persen Bobot (% b/b)":
             hasil_akhir = nilai_asal / 10000
             st.markdown("**1. Mengubah Part Per Million (ppm) langsung ke Persen Bobot (% b/b):**")
-            st.latex(f"\\% \\text{{ b/b}} = \\frac{{\\text{{ppm}}}}{{10.000}}")
-            st.latex(f"\\% \\text{{ b/b}} = \\frac{{{format_koma(nilai_asal)}\\text{{ ppm}}}}{{10.000}} = {format_koma(hasil_akhir)}\\%")
+            st.latex(r"\% \text{ b/b} = \frac{\text{ppm}}{10.000}")
+            st.latex(r"\% \text{ b/b} = \frac{" + format_koma(nilai_asal) + r"\text{ ppm}}{10.000} = " + format_koma(hasil_akhir) + r"\%")
             
         else:
             molaritas_pusat = 0.0
@@ -262,52 +262,52 @@ elif menu == "2. Konversi Satuan Kimia":
             
             if satuan_asal == "Molaritas (M)":
                 molaritas_pusat = nilai_asal
-                st.latex(f"\\text{{Molaritas Pusat (M)}} = {format_koma(molaritas_pusat)}\\text{{ mol/L}}")
+                st.latex(r"\text{Molaritas Pusat (M)} = " + format_koma(molaritas_pusat) + r"\text{ mol/L}")
             elif satuan_asal == "Massa (gram)":
                 molaritas_pusat = (nilai_asal / mr_val) * (1000 / v_ml)
-                st.latex(f"M = \\frac{{\\text{{gram}}}}{{\\text{{Mr}}}} \\times \\frac{{1000 \\text{ mL/L}}}{{V_{{\\text{{mL}}}}}}")
-                st.latex(f"M = \\frac{{{format_koma(nilai_asal)}\\text{{ g}}}}{{{format_koma(mr_val)}\\text{{ g/mol}}}} \\times \\frac{{1000 \\text{{ mL/L}}}}{{{format_koma_v(v_ml)}\\text{{ mL}}}} = {format_koma(molaritas_pusat)}\\text{{ mol/L (M)}}")
+                st.latex(r"M = \frac{\text{gram}}{\text{Mr}} \times \frac{1000 \text{ mL/L}}{V_{\text{mL}}}")
+                st.latex(r"M = \frac{" + format_koma(nilai_asal) + r"\text{ g}}{" + format_koma(mr_val) + r"\text{ g/mol}} \times \frac{1000 \text{ mL/L}}{" + format_koma_v(v_ml) + r"\text{ mL}} = " + format_koma(molaritas_pusat) + r"\text{ mol/L (M)}")
             elif satuan_asal == "Mol (mol)":
                 molaritas_pusat = nilai_asal * (1000 / v_ml)
-                st.latex(f"M = \\text{{mol}} \\times \\frac{{1000 \\text{{ mL/L}}}}{{V_{{\\text{{mL}}}}}}")
-                st.latex(f"M = {format_koma(nilai_asal)}\\text{{ mol}} \\times \\frac{{1000 \\text{{ mL/L}}}}{{{format_koma_v(v_ml)}\\text{{ mL}}}} = {format_koma(molaritas_pusat)}\\text{{ mol/L (M)}}")
+                st.latex(r"M = \text{mol} \times \frac{1000 \text{ mL/L}}{V_{\text{mL}}}")
+                st.latex(r"M = " + format_koma(nilai_asal) + r"\text{ mol} \times \frac{1000 \text{ mL/L}}{" + format_koma_v(v_ml) + r"\text{ mL}} = " + format_koma(molaritas_pusat) + r"\text{ mol/L (M)}")
             elif satuan_asal == "Normalitas (N)":
                 molaritas_pusat = nilai_asal / val_val
-                st.latex(f"M = \\frac{{N}}{{\\text{{Valensi}}}}")
-                st.latex(f"M = \\frac{{{format_koma(nilai_asal)}\\text{{ ekv/L}}}}{{{val_val}\\text{{ ekv/mol}}}} = {format_koma(molaritas_pusat)}\\text{{ mol/L (M)}}")
+                st.latex(r"M = \frac{N}{\text{Valensi}}")
+                st.latex(r"M = \frac{" + format_koma(nilai_asal) + r"\text{ ekv/L}}{" + str(val_val) + r"\text{ ekv/mol}} = " + format_koma(molaritas_pusat) + r"\text{ mol/L (M)}")
             elif satuan_asal == "Part Per Million (ppm)":
                 molaritas_pusat = nilai_asal / (mr_val * 1000)
-                st.latex(f"M = \\frac{{\\text{{ppm}}}}{{\\text{{Mr}} \\times 1000 \\text{{ mg/g}}}}")
-                st.latex(f"M = \\frac{{{format_koma(nilai_asal)}\\text{{ mg/L}}}}{{{format_koma(mr_val)}\\text{{ g/mol}} \\times 1000 \\text{{ mg/g}}}} = {format_koma(molaritas_pusat)}\\text{{ mol/L (M)}}")
+                st.latex(r"M = \frac{\text{ppm}}{\text{Mr} \times 1000 \text{ mg/g}}")
+                st.latex(r"M = \frac{" + format_koma(nilai_asal) + r"\text{ mg/L}}{" + format_koma(mr_val) + r"\text{ g/mol} \times 1000 \text{ mg/g}} = " + format_koma(molaritas_pusat) + r"\text{ mol/L (M)}")
             elif satuan_asal == "Persen Bobot (% b/b)":
                 molaritas_pusat = (nilai_asal * rho_val * 10) / mr_val
-                st.latex(f"M = \\frac{{\\% \\times \\rho \\times 10 \\text{{ mL}}\\cdot\\%/\\text{{L}}}}{{\\text{{Mr}}}}")
-                st.latex(f"M = \\frac{{{format_koma(nilai_asal)}\\% \\times {format_koma(rho_val)}\\text{{ g/mL}} \\times 10 \\text{{ mL}}\\cdot\\%/\\text{{L}}}}{{{format_koma(mr_val)}\\text{{ g/mol}}}} = {format_koma(molaritas_pusat)}\\text{{ mol/L (M)}}")
+                st.latex(r"M = \frac{\% \times \rho \times 10 \text{ mL}\cdot\%/\text{L}}{\text{Mr}}")
+                st.latex(r"M = \frac{" + format_koma(nilai_asal) + r"\% \times " + format_koma(rho_val) + r"\text{ g/mL} \times 10 \text{ mL}\cdot\%/\text{L}}{" + format_koma(mr_val) + r"\text{ g/mol}} = " + format_koma(molaritas_pusat) + r"\text{ mol/L (M)}")
 
             st.markdown("**2. Konversi Molaritas Pusat (M) ke Satuan Target:**")
             if satuan_tujuan == "Molaritas (M)":
                 hasil_akhir = molaritas_pusat
-                st.latex(f"\\text{{Hasil Akhir}} = {format_koma(hasil_akhir)}\\text{{ mol/L (M)}}")
+                st.latex(r"\text{Hasil Akhir} = " + format_koma(hasil_akhir) + r"\text{ mol/L (M)}")
             elif satuan_tujuan == "Massa (gram)":
                 hasil_akhir = (molaritas_pusat * mr_val * v_ml) / 1000
-                st.latex(f"\\text{{gram}} = \\frac{{M \\times \\text{{Mr}} \\times V_{{\\text{{mL}}}}}}{{1000 \\text{{ mL/L}}}}")
-                st.latex(f"\\text{{gram}} = \\frac{{{format_koma(molaritas_pusat)}\\text{{ mol/L}} \\times {format_koma(mr_val)}\\text{{ g/mol}} \\times {format_koma_v(v_ml)}\\text{{ mL}}}}{{1000 \\text{{ mL/L}}}} = {format_koma(hasil_akhir)}\\text{{ gram}}")
+                st.latex(r"\text{gram} = \frac{M \times \text{Mr} \times V_{\text{mL}}}{1000 \text{ mL/L}}")
+                st.latex(r"\text{gram} = \frac{" + format_koma(molaritas_pusat) + r"\text{ mol/L} \times " + format_koma(mr_val) + r"\text{ g/mol} \times " + format_koma_v(v_ml) + r"\text{ mL}}{1000 \text{ mL/L}} = " + format_koma(hasil_akhir) + r"\text{ gram}")
             elif satuan_tujuan == "Mol (mol)":
                 hasil_akhir = (molaritas_pusat * v_ml) / 1000
-                st.latex(f"\\text{{mol}} = \\frac{{M \\times V_{{\\text{{mL}}}}}}{{1000 \\text{{ mL/L}}}}")
-                st.latex(f"\\text{{mol}} = \\frac{{{format_koma(molaritas_pusat)}\\text{{ mol/L}} \\times {format_koma_v(v_ml)}\\text{{ mL}}}}{{1000 \\text{{ mL/L}}}} = {format_koma(hasil_akhir)}\\text{{ mol}}")
+                st.latex(r"\text{mol} = \frac{M \times V_{\text{mL}}}{1000 \text{ mL/L}}")
+                st.latex(r"\text{mol} = \frac{" + format_koma(molaritas_pusat) + r"\text{ mol/L} \times " + format_koma_v(v_ml) + r"\text{ mL}}{1000 \text{ mL/L}} = " + format_koma(hasil_akhir) + r"\text{ mol}")
             elif satuan_tujuan == "Normalitas (N)":
                 hasil_akhir = molaritas_pusat * val_val
-                st.latex(f"N = M \\times \\text{{Valensi}}")
-                st.latex(f"N = {format_koma(molaritas_pusat)}\\text{{ mol/L}} \\times {val_val}\\text{{ ekv/mol}} = {format_koma(hasil_akhir)}\\text{{ ekv/L (N)}}")
+                st.latex(r"N = M \times \text{Valensi}")
+                st.latex(r"N = " + format_koma(molaritas_pusat) + r"\text{ mol/L} \times " + str(val_val) + r"\text{ ekv/mol} = " + format_koma(hasil_akhir) + r"\text{ ekv/L (N)}")
             elif satuan_tujuan == "Part Per Million (ppm)":
                 hasil_akhir = molaritas_pusat * mr_val * 1000
-                st.latex(f"\\text{{ppm}} = M \\times \\text{{Mr}} \\times 1000 \\text{{ mg/g}}")
-                st.latex(f"\\text{{ppm}} = {format_koma(molaritas_pusat)}\\text{{ mol/L}} \\times {format_koma(mr_val)}\\text{{ g/mol}} \\times 1000 \\text{{ mg/g}} = {format_koma(hasil_akhir)}\\text{{ mg/L (ppm)}}")
+                st.latex(r"\text{ppm} = M \times \text{Mr} \times 1000 \text{ mg/g}")
+                st.latex(r"\text{ppm} = " + format_koma(molaritas_pusat) + r"\text{ mol/L} \times " + format_koma(mr_val) + r"\text{ g/mol} \times 1000 \text{ mg/g} = " + format_koma(hasil_akhir) + r"\text{ mg/L (ppm)}")
             elif satuan_tujuan == "Persen Bobot (% b/b)":
                 hasil_akhir = (molaritas_pusat * mr_val) / (rho_val * 10)
-                st.latex(f"\\% \\text{{ b/b}} = \\frac{{M \\times \\text{{Mr}}}}{{\\rho \\times 10 \\text{{ mL}}\\cdot\\%/\\text{{L}}}}")
-                st.latex(f"\\% \\text{{ b/b}} = \\frac{{{format_koma(molaritas_pusat)}\\text{{ mol/L}} \\times {format_koma(mr_val)}\\text{{ g/mol}}}}{{{format_koma(rho_val)}\\text{{ g/mL}} \\times 10 \\text{{ mL}}\\cdot\\%/\\text{{L}}}} = {format_koma(hasil_akhir)}\\%")
+                st.latex(r"\% \text{ b/b} = \frac{M \times \text{Mr}}{\rho \times 10 \text{ mL}\cdot\%/\text{L}}")
+                st.latex(r"\% \text{ b/b} = \frac{" + format_koma(molaritas_pusat) + r"\text{ mol/L} \times " + format_koma(mr_val) + r"\text{ g/mol}}{" + format_koma(rho_val) + r"\text{ g/mL} \times 10 \text{ mL}\cdot\%/\text{L}} = " + format_koma(hasil_akhir) + r"\%")
 
         st.success(f"Hasil Akhir Konversi: {format_koma(nilai_asal)} {satuan_asal} = {format_koma(hasil_akhir)} {satuan_tujuan}")
 
@@ -338,9 +338,9 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
         if st.button("Hitung M1"):
             m1 = (m2 * v2) / v1
             st.markdown("### 📝 Langkah Perhitungan:")
-            st.latex(f"V_1 \\times M_1 = V_2 \\times M_2")
-            st.latex(f"M_1 = \\frac{{V_2 \\times M_2}}{{V_1}}")
-            st.latex(f"M_1 = \\frac{{{format_koma_v(v2)}\\text{{ mL}} \\times {format_koma(m2)}\\text{{ M}}}}{{{format_koma_v(v1)}\\text{{ mL}}}} = {format_koma(m1)}\\text{{ M}}")
+            st.latex(r"V_1 \times M_1 = V_2 \times M_2")
+            st.latex(r"M_1 = \frac{V_2 \times M_2}{V_1}")
+            st.latex(r"M_1 = \frac{" + format_koma_v(v2) + r"\text{ mL} \times " + format_koma(m2) + r"\text{ M}}{" + format_koma_v(v1) + r"\text{ mL}} = " + format_koma(m1) + r"\text{ M}")
             st.success(f"Hasil Akhir: Konsentrasi Larutan Pekat Asal (M1) = {format_koma(m1)} M (atau N)")
             
     elif target_cari == "Volume Larutan Pekat (V1)":
@@ -352,9 +352,9 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
             if m1 >= m2:
                 v1 = (m2 * v2) / m1
                 st.markdown("### 📝 Langkah Perhitungan:")
-                st.latex(f"V_1 \\times M_1 = V_2 \\times M_2")
-                st.latex(f"V_1 = \\frac{{V_2 \\times M_2}}{{M_1}}")
-                st.latex(f"V_1 = \\frac{{{format_koma_v(v2)}\\text{{ mL}} \\times {format_koma(m2)}\\text{{ M}}}}{{{format_koma(m1)}\\text{{ M}}}} = {format_koma(v1)}\\text{{ mL}}")
+                st.latex(r"V_1 \times M_1 = V_2 \times M_2")
+                st.latex(r"V_1 = \frac{V_2 \times M_2}{M_1}")
+                st.latex(r"V_1 = \frac{" + format_koma_v(v2) + r"\text{ mL} \times " + format_koma(m2) + r"\text{ M}}{" + format_koma(m1) + r"\text{ M}} = " + format_koma(v1) + r"\text{ mL}")
                 st.success(f"Hasil Akhir: Ambil {format_koma(v1)} mL larutan pekat (V1), lalu encerkan hingga {format_koma_v(v2)} mL.")
             else:
                 st.error("Gagal: Konsentrasi awal (M1) tidak boleh lebih kecil dari konsentrasi akhir (M2)!")
@@ -368,9 +368,9 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
             if v2 >= v1:
                 m2 = (m1 * v1) / v2
                 st.markdown("### 📝 Langkah Perhitungan:")
-                st.latex(f"V_1 \\times M_1 = V_2 \\times M_2")
-                st.latex(f"M_2 = \\frac{{V_1 \\times M_1}}{{V_2}}")
-                st.latex(f"M_2 = \\frac{{{format_koma_v(v1)}\\text{{ mL}} \\times {format_koma(m1)}\\text{{ M}}}}{{{format_koma_v(v2)}\\text{{ mL}}}} = {format_koma(m2)}\\text{{ M}}")
+                st.latex(r"V_1 \times M_1 = V_2 \times M_2")
+                st.latex(r"M_2 = \frac{V_1 \times M_1}{V_2}")
+                st.latex(r"M_2 = \frac{" + format_koma_v(v1) + r"\text{ mL} \times " + format_koma(m1) + r"\text{ M}}{" + format_koma_v(v2) + r"\text{ mL}} = " + format_koma(m2) + r"\text{ M}")
                 st.success(f"Hasil Akhir: Konsentrasi Larutan Setelah Diencerkan (M2) = {format_koma(m2)} M (atau N)")
             else:
                 st.error("Gagal: Volume akhir (V2) harus lebih besar daripada volume awal (V1)!")
@@ -384,9 +384,9 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
             if m1 >= m2:
                 v2 = (m1 * v1) / m2
                 st.markdown("### 📝 Langkah Perhitungan:")
-                st.latex(f"V_1 \\times M_1 = V_2 \\times M_2")
-                st.latex(f"V_2 = \\frac{{V_1 \\times M_1}}{{M_2}}")
-                st.latex(f"V_2 = \\frac{{{format_koma_v(v1)}\\text{{ mL}} \\times {format_koma(m1)}\\text{{ M}}}}{{{format_koma(m2)}\\text{{ M}}}} = {format_koma_v(v2)}\\text{{ mL}}")
+                st.latex(r"V_1 \times M_1 = V_2 \times M_2")
+                st.latex(r"V_2 = \frac{V_1 \times M_1}{M_2}")
+                st.latex(r"V_2 = \frac{" + format_koma_v(v1) + r"\text{ mL} \times " + format_koma(m1) + r"\text{ M}}{" + format_koma(m2) + r"\text{ M}} = " + format_koma_v(v2) + r"\text{ mL}")
                 st.success(f"Hasil Akhir: Volume Akhir Larutan Encer (V2) = {format_koma_v(v2)} mL")
             else:
                 st.error("Gagal: Konsentrasi awal (M1) tidak boleh lebih kecil dari konsentrasi akhir (M2)!")
