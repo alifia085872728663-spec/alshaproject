@@ -134,11 +134,12 @@ def hitung_bm_dari_teks(rumus):
     return total_bm, unsur_tidak_dikenal, cara_teks
 
 # ==========================================
-# HALAMAN UTAMA (SELALU MUNCUL DI ATAS)
+# HALAMAN UTAMA
 # ==========================================
 st.title("🧪 Kalkulator Kimia")
 st.markdown("### Perhitungan Bobot Molekul, Konversi Satuan, dan Faktor Pengenceran")
 
+# TAMBAHAN KELAS 1A DI IDENTITAS
 st.markdown("""
 <div class="identitas-box">
     <div style="color: #0369a1; font-weight: bold; font-size: 1.1rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-bottom: 10px;">
@@ -146,6 +147,7 @@ st.markdown("""
     </div>
     <table style="width:100%; border:none; color:#334155; font-size:0.95rem; line-height: 1.6;">
         <tr><td style="width: 25%; font-weight: bold;">Mata Kuliah</td><td>: Logika Pemrograman dan Komputer</td></tr>
+        <tr><td style="font-weight: bold;">Kelas</td><td style="color: #0d9488; font-weight: bold;">: 1A</td></tr>
         <tr><td style="font-weight: bold;">Kelompok</td><td>: Kelompok 7</td></tr>
         <tr><td style="vertical-align: top; font-weight: bold;">Anggota</td><td>: 
             <table style="width:100%; margin-top:-2px; border:none; color:#334155;">
@@ -159,7 +161,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# SIDEBAR NAVIGASI MENU (3 POIN UTAMA)
+# SIDEBAR NAVIGASI MENU
 # ==========================================
 st.sidebar.header("🧭 Menu Fitur")
 menu = st.sidebar.radio(
@@ -205,7 +207,7 @@ elif menu == "1. Perhitungan Bobot Molekul (BM/Mr)":
             st.warning("Silakan isi rumus kimia terlebih dahulu.")
 
 # ==========================================
-# MENU 2: KONVERSI SATUAN KIMIA (FIXED!)
+# MENU 2: KONVERSI SATUAN KIMIA
 # ==========================================
 elif menu == "2. Konversi Satuan Kimia":
     st.header("🔄 Konversi Hubungan Satuan Kimia")
@@ -221,6 +223,7 @@ elif menu == "2. Konversi Satuan Kimia":
         
     st.markdown("### ⚙️ Pengaturan Alur Konversi")
     
+    # NAMA SATUAN FIXED: Menggunakan "Persen Bobot (% b/b)"
     daftar_satuan = [
         "Massa (gram)", "Mol (mol)", "Molaritas (M)", 
         "Normalitas (N)", "Part Per Million (ppm)", "Persen Bobot (% b/b)"
@@ -228,12 +231,12 @@ elif menu == "2. Konversi Satuan Kimia":
     
     col_from, col_to = st.columns(2)
     with col_from:
-        satuan_asal = st.selectbox("Pilih Satuan Asal (Yang Diketahui):", daftar_satuan, index=5) # Default diubah ke % b/b untuk testing langsung
+        satuan_asal = st.selectbox("Pilih Satuan Asal (Yang Diketahui):", daftar_satuan, index=5)
     with col_to:
         daftar_tujuan = daftar_satuan.copy()
         if satuan_asal in daftar_tujuan:
             daftar_tujuan.remove(satuan_asal)
-        satuan_tujuan = st.selectbox("Pilih Satuan Tujuan (Yang Dicari):", daftar_tujuan, index=4) # Default diubah ke ppm
+        satuan_tujuan = st.selectbox("Pilih Satuan Tujuan (Yang Dicari):", daftar_tujuan, index=4)
 
     st.markdown("---")
     
@@ -256,7 +259,7 @@ elif menu == "2. Konversi Satuan Kimia":
         langkah_ke_molaritas = ""
         langkah_ke_tujuan = ""
         
-        # --- PERBAIKAN LOGIKA SPESIFIK: Hubungan Langsung % b/b dan ppm ---
+        # --- PERBAIKAN LOGIKA STRING & HUBUNGAN DIRECT % b/b KE ppm ---
         if satuan_asal == "Persen Bobot (% b/b)" and satuan_tujuan == "Part Per Million (ppm)":
             hasil_akhir = nilai_asal * 10000
             langkah_ke_molaritas = f"1. Mengubah Persen Bobot (% b/b) langsung ke ppm:"
@@ -267,7 +270,7 @@ elif menu == "2. Konversi Satuan Kimia":
             langkah_ke_molaritas = f"1. Mengubah ppm langsung ke Persen Bobot (% b/b):"
             langkah_ke_tujuan = f"   Rumus mutlak: % b/b = ppm / 10.000\n   % b/b = {format_koma(nilai_asal)} / 10.000 = {format_koma(hasil_akhir)} %"
             
-        # --- LOGIKA KONVERSI LAINNYA JIKA MELALUI JEMBATAN MOLARITAS ---
+        # --- ALUR JEMBATAN LOGIKA TERPUSAT (MOLARITAS CENTRAL HUB) ---
         else:
             molaritas_pusat = 0.0
             if satuan_asal == "Molaritas (M)":
@@ -346,39 +349,4 @@ elif menu == "3. Perhitungan Faktor Pengenceran":
                     f"**Hasil Akhir:** {format_koma(m1)} M")
             
     elif target_cari == "Volume Larutan Pekat (V1)":
-        m1 = st.number_input("Masukkan Konsentrasi Larutan Pekat Asal (M1):", min_value=0.01, value=12.0)
-        m2 = st.number_input("Masukkan Konsentrasi Larutan Encer yang Diinginkan (M2):", min_value=0.01, value=0.5)
-        v2 = st.number_input("Masukkan Volume Larutan Encer yang Diinginkan (V2) dalam mL:", min_value=0.01, value=500.0)
-        
-        if st.button("Hitung V1"):
-            if m1 >= m2:
-                v1 = (m2 * v2) / m1
-                st.success(f"Hasil Perhitungan: Ambil {format_koma(v1)} mL larutan pekat (V1), lalu encerkan hingga {format_koma_v(v2)} mL.")
-                st.markdown("### 📝 Langkah Perhitungan:")
-                st.info(f"**Rumus Dasar:** V1 * M1 = V2 * M2\n\n"
-                        f"**Turunan Rumus:** V1 = (M2 * V2) / M1\n\n"
-                        f"**Proses Hitung:** V1 = ({format_koma(m2)} * {format_koma_v(v2)}) / {format_koma(m1)}\n\n"
-                        f"**Hasil Akhir:** Ambil {format_koma(v1)} mL larutan pekat, tambahkan aquadest hingga volume total {format_koma_v(v2)} mL.")
-            else:
-                st.error("Gagal: Konsentrasi awal (M1) tidak boleh lebih kecil dari konsentrasi akhir (M2)!")
-
-    elif target_cari == "Konsentrasi Larutan Encer (M2)":
-        m1 = st.number_input("Masukkan Konsentrasi Larutan Pekat Asal (M1):", min_value=0.01, value=2.0)
-        v1 = st.number_input("Masukkan Volume Larutan Pekat yang diambil (V1) dalam mL:", min_value=0.01, value=25.0)
-        v2 = st.number_input("Masukkan Volume Larutan Setelah Diencerkan (V2) dalam mL:", min_value=0.01, value=250.0)
-        
-        if st.button("Hitung M2"):
-            if v2 >= v1:
-                m2 = (m1 * v1) / v2
-                st.success(f"Hasil Perhitungan: Konsentrasi Larutan Setelah Diencerkan (M2) = {format_koma(m2)} M (atau N)")
-                st.markdown("### 📝 Langkah Perhitungan:")
-                st.info(f"**Rumus Dasar:** V1 * M1 = V2 * M2\n\n"
-                        f"**Turunan Rumus:** M2 = (M1 * V1) / V2\n\n"
-                        f"**Proses Hitung:** M2 = ({format_koma(m1)} * {format_koma_v(v1)}) / {format_koma_v(v2)}\n\n"
-                        f"**Hasil Akhir:** {format_koma(m2)} M")
-            else:
-                st.error("Gagal: Volume akhir (V2) harus lebih besar daripada volume awal (V1)!")
-
-    elif target_cari == "Volume Larutan Encer (V2)":
-        m1 = st.number_input("Masukkan Konsentrasi Larutan Pekat Asal (M1):", min_value=0.01, value=6.0)
-        v1 = st.number
+        m1 = st.number_input("Masukkan Konsentrasi Larutan Pekat Asal
